@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, CheckCircle } from "lucide-react"
+import { ArrowRight, CheckCircle, ChevronRight, Star } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
@@ -28,10 +29,18 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
               <Link href="/produkter">
-                <button className="btn-primary px-8 py-3 text-base">Se våre maskiner</button>
+                <Button size="lg" className="px-8 py-6 text-base">
+                  Se våre maskiner
+                </Button>
               </Link>
               <Link href="/kontakt">
-                <button className="btn-outline px-8 py-3 text-base">Kontakt oss for demo</button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="px-8 py-6 text-base border-white text-white hover:bg-white/10"
+                >
+                  Kontakt oss for demo
+                </Button>
               </Link>
             </div>
             <div className="flex flex-wrap gap-6 mt-10">
@@ -58,123 +67,353 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Professional Benefits Section */}
-      <section className="section-spacing bg-white overflow-hidden">
-        <div className="container container-spacing mx-auto">
-          {/* High-impact heading */}
-          <div className="max-w-[800px] mx-auto text-center mb-16">
-            <div className="inline-block px-4 py-1 mb-4 border border-primary-100 bg-primary-50 text-primary-700 rounded-full">
-              <span className="text-body-small font-medium">Profesjonell kvalitet</span>
-            </div>
-            <h2 className="font-heading text-h2 text-on-light mb-6">
-              IBIX<span className="text-primary-600">®</span> — Satt standarden for profesjonell sandblåsing
-            </h2>
-            <p className="text-body-large text-on-light-secondary mx-auto max-w-[600px]">
-              Markedsledende teknologi med uovertruffen presisjon og effektivitet
+      {/* Products Showcase Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4">Våre produkter</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Derksen Trading tilbyr et komplett utvalg av IBIX sandblåsere og tilbehør for alle typer
+              overflatebehandling.
             </p>
           </div>
 
-          {/* Large showcase image with overlay text */}
-          <div className="relative rounded-xl overflow-hidden mb-24 shadow-lg">
-            <div className="aspect-[21/9] w-full">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%288%29-leWLEemyqrjW3sNhfc9utbaCN2hqs0.jpeg"
-                alt="Sandblåsing med gnister"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 overlay-gradient-bottom flex flex-col justify-end p-6 md:p-10">
-                <div className="max-w-4xl">
-                  <h3 className="text-xl md:text-2xl font-semibold text-white mb-3">
-                    Revolusjonerende støvfri teknologi
-                  </h3>
-                  <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl font-light">
-                    IBIX kombinerer kraft og presisjon med opptil 99% støvreduksjon — industrivinnende ytelse i et
-                    kompakt, mobilt system
-                  </p>
-                  <Link href="/teknologi">
-                    <button className="btn-primary gap-2 flex items-center">
-                      Utforsk teknologien <ArrowRight className="h-4 w-4" />
-                    </button>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Product Card 1 */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow hover:-translate-y-1">
+              <div className="aspect-video relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%283%29-RrXNXQiS0K518yqePzzEmZ1K5n8cJt.jpeg"
+                  alt="IBIX 9 Basic"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                  <div className="p-4 text-white">
+                    <span className="bg-primary-500 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      Populær
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">IBIX® 9 Basic</h3>
+                <p className="text-gray-600 mb-4">
+                  9L tørrblåser, superlett (12kg), ypperlig for småskala arbeid og hobby.
+                </p>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                  </div>
+                  <Link
+                    href="/produkter/ibix-9-basic"
+                    className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+                  >
+                    Se detaljer <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Card 2 */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow hover:-translate-y-1">
+              <div className="aspect-video relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%286%29-XaPI1VRqmQPLtpYlncbxkzHK4GS6IH.jpeg"
+                  alt="IBIX Problaster 25 H2O"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                  <div className="p-4 text-white">
+                    <span className="bg-primary-500 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      Bestselger
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">IBIX® Problaster 25 H2O</h3>
+                <p className="text-gray-600 mb-4">
+                  25L kombiblåser, allsidig og kompakt, yter som en stor tradisjonell potte men veier kun 28kg.
+                </p>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                  </div>
+                  <Link
+                    href="/produkter/ibix-problaster-25-h2o"
+                    className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+                  >
+                    Se detaljer <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Card 3 */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow hover:-translate-y-1">
+              <div className="aspect-video relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%288%29-leWLEemyqrjW3sNhfc9utbaCN2hqs0.jpeg"
+                  alt="IBIX Problaster 40 H2O"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                  <div className="p-4 text-white">
+                    <span className="bg-primary-500 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      Profesjonell
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">IBIX® Problaster 40 H2O</h3>
+                <p className="text-gray-600 mb-4">
+                  40L kombiblåser, kraftig og effektiv, for større prosjekter med behov for lengre driftstid.
+                </p>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                  </div>
+                  <Link
+                    href="/produkter/ibix-problaster-40-h2o"
+                    className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+                  >
+                    Se detaljer <ChevronRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Key benefits */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-primary-50 mb-6">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary-600"
-                >
-                  <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" />
-                </svg>
+          <div className="text-center mt-12">
+            <Link href="/produkter">
+              <Button variant="outline" className="px-6 py-3">
+                Se alle produkter <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4">Våre tjenester</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Vi tilbyr profesjonelle tjenester innen sandblåsing, graffiti-fjerning og industrilakkering.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Service Card 1 */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow hover:-translate-y-1">
+              <div className="aspect-video relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%282%29-U1eUsrsuHndGSXZ9LMzlaiW6mvS4Nv.jpeg"
+                  alt="Sandblåsing"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Støvfri presisjon</h3>
-              <p className="text-gray-600 font-light">
-                Patentert teknologi som reduserer støv med opptil 99% for renere, sikrere og mer miljøvennlig
-                sandblåsing
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Sandblåsing</h3>
+                <p className="text-gray-600 mb-4">
+                  Mobil sandblåsing av metall, betong, mur, etc. Vi kommer ut med utstyr og kompressor til ditt
+                  prosjekt.
+                </p>
+                <Link
+                  href="/tjenester/sandblasing"
+                  className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+                >
+                  Les mer <ChevronRight className="h-4 w-4 ml-1" />
+                </Link>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-primary-50 mb-6">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary-600"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
+
+            {/* Service Card 2 */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow hover:-translate-y-1">
+              <div className="aspect-video relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%287%29-bGwh7iYOjIyeNiQZidzcHtGbWkB4HC.jpeg"
+                  alt="Graffiti-fjerning"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Ekspertise & support</h3>
-              <p className="text-gray-600 font-light">
-                Over 10 års erfaring med grundig opplæring, teknisk støtte og lokal service i Bodø og Nordland
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Graffiti-fjerning</h3>
+                <p className="text-gray-600 mb-4">
+                  Skånsom fjerning av uønsket tagging på vegger, stein, metall. Med IBIX våtblåsingsteknikk fjerner vi
+                  maling uten å skade underlaget.
+                </p>
+                <Link
+                  href="/tjenester/graffiti-fjerning"
+                  className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+                >
+                  Les mer <ChevronRight className="h-4 w-4 ml-1" />
+                </Link>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-primary-50 mb-6">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary-600"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                  <path d="m14.5 9-5 5" />
-                  <path d="m9.5 9 5 5" />
-                </svg>
+
+            {/* Service Card 3 */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow hover:-translate-y-1">
+              <div className="aspect-video relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%284%29-glZcVxwSM9VSqQWgANYueBE4azT9zU.jpeg"
+                  alt="Industrilakkering"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Allsidig beskyttelse</h3>
-              <p className="text-gray-600 font-light">
-                Perfekt for alt fra rustfjerning til graffiti-fjerning – én maskin for utallige bruksområder
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Industrilakkering</h3>
+                <p className="text-gray-600 mb-4">
+                  Vi tilbyr også påføring av beskyttende belegg etter sandblåsing. Som forhandler av ZINGA® sinkbelegg
+                  kan vi galvanisere på stedet.
+                </p>
+                <Link
+                  href="/tjenester/industrilakkering"
+                  className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
+                >
+                  Les mer <ChevronRight className="h-4 w-4 ml-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4">Hva våre kunder sier</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Vi er stolte av å ha hjulpet mange kunder med deres prosjekter. Her er noen tilbakemeldinger.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center mb-4">
+                <div className="flex text-yellow-400">
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4 italic">
+                "Vi har brukt IBIX Problaster 25 H2O i over et år nå, og er svært fornøyd med resultatet. Maskinen er
+                lett å bruke og gir et profesjonelt resultat hver gang."
               </p>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-semibold">
+                  ON
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-medium">Ole Nordmann</h4>
+                  <p className="text-sm text-gray-500">Nordmann Bygg AS</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center mb-4">
+                <div className="flex text-yellow-400">
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4 italic">
+                "Derksen Trading hjalp oss med å fjerne graffiti fra en historisk bygning. Resultatet var imponerende -
+                all graffiti ble fjernet uten å skade den originale fasaden."
+              </p>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-semibold">
+                  KH
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-medium">Kari Hansen</h4>
+                  <p className="text-sm text-gray-500">Hansen Eiendom</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center mb-4">
+                <div className="flex text-yellow-400">
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                  <Star className="h-5 w-5 fill-yellow-400" />
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4 italic">
+                "Vi leide IBIX 9 Basic for å restaurere en veteranbil. Maskinen var enkel å bruke og fjernet rust og
+                gammel maling effektivt. Anbefales på det sterkeste!"
+              </p>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-semibold">
+                  LP
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-medium">Lars Pedersen</h4>
+                  <p className="text-sm text-gray-500">Pedersen Bilverksted</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-secondary-800 text-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-6">Klar til å starte ditt prosjekt?</h2>
+            <p className="text-xl text-gray-200 mb-8">
+              Kontakt oss i dag for en uforpliktende samtale om hvordan vi kan hjelpe deg med ditt prosjekt.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/kontakt">
+                <Button size="lg" className="px-8 py-6 text-base">
+                  Kontakt oss
+                </Button>
+              </Link>
+              <Link href="/produkter">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="px-8 py-6 text-base border-white text-white hover:bg-white/10"
+                >
+                  Se våre produkter
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

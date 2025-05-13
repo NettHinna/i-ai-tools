@@ -36,8 +36,8 @@ const config: Config = {
           800: "#075985",
           900: "#0c4a6e",
           950: "#082f49",
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#0284c7",
+          foreground: "#ffffff",
         },
         secondary: {
           50: "#f8fafc",
@@ -51,8 +51,8 @@ const config: Config = {
           800: "#1e293b",
           900: "#0f172a",
           950: "#020617",
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#1e293b",
+          foreground: "#ffffff",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

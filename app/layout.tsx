@@ -4,7 +4,7 @@ import { Inter, Outfit } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import SimpleChatWidget from "@/components/chat/simple-chat-widget"
+import ChatWidgetWrapper from "@/components/chat/chat-widget-wrapper"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,7 +38,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
-        <SimpleChatWidget />
+        <ChatWidgetWrapper />
       </body>
     </html>
   )
