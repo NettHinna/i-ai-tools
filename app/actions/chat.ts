@@ -51,6 +51,12 @@ ${websiteInfo}
 
 export async function saveChatSession(sessionId: string) {
   try {
+    // Validate sessionId format
+    if (!sessionId || typeof sessionId !== "string") {
+      console.error("Invalid sessionId format:", sessionId)
+      return { success: false, error: "Invalid session ID format" }
+    }
+
     // Check if session already exists
     const existingSession = await db.query.chatSessions.findFirst({
       where: eq(chatSessions.sessionId, sessionId),
@@ -72,6 +78,16 @@ export async function saveChatSession(sessionId: string) {
 
 export async function saveChatMessage(sessionId: string, role: string, content: string) {
   try {
+    // Validate inputs
+    if (!sessionId || typeof sessionId !== "string") {
+      console.error("Invalid sessionId format:", sessionId)
+      return { success: false, error: "Invalid session ID format" }
+    }
+
+    if (!role || !content) {
+      return { success: false, error: "Role and content are required" }
+    }
+
     // Ensure session exists
     await saveChatSession(sessionId)
 
@@ -91,26 +107,50 @@ export async function saveChatMessage(sessionId: string, role: string, content: 
 
 export async function getChatHistory(sessionId: string) {
   try {
-    const messages = await db.query.chatMessages.findMany({
-      where: eq(chatMessages.sessionId, sessionId),
-      orderBy: (chatMessages, { asc }) => [asc(chatMessages.createdAt)],
-    })
+    // Validate sessionId format
+    if (!sessionId || typeof sessionId !== "string") {
+      console.error("Invalid sessionId format:", sessionId)
+      return {
+        success: false,
+        error: "Invalid session ID format",
+        messages: [],
+      }
+    }
 
-    return {
-      success: true,
-      messages: messages.map((msg) => ({
-        id: msg.id.toString(),
-        role: msg.role as "user" | "assistant" | "system",
-        content: msg.content,
-      })),
+    // Use a try-catch block specifically for the database query
+    try {
+      const messages = await db.query.chatMessages.findMany({
+        where: eq(chatMessages.sessionId, sessionId),
+        orderBy: (chatMessages, { asc }) => [asc(chatMessages.createdAt)],
+      })
+
+      return {
+        success: true,
+        messages: messages.map((msg) => ({
+          id: msg.id.toString(),
+          role: msg.role as "user" | "assistant" | "system",
+          content: msg.content,
+        })),
+      }
+    } catch (dbError) {
+      console.error("Database error getting chat history:", dbError)
+      return {
+        success: false,
+        error: "Database error: " + (dbError instanceof Error ? dbError.message : "Unknown error"),
+        messages: [],
+      }
     }
   } catch (error) {
     console.error("Error getting chat history:", error)
-    return { success: false, error: "Failed to get chat history", messages: [] }
+    return {
+      success: false,
+      error: "Failed to get chat history",
+      messages: [],
+    }
   }
 }
 
-export async function chat(messages: Message[]) {
+export async function chat(messages: Message[], sessionId?: string) {
   try {
     // Filter out system messages from the conversation history
     const conversationHistory = messages.filter((message) => message.role !== "system")

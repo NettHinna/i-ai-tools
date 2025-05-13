@@ -59,27 +59,43 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
 
   // Generate a session ID for the chat
   useEffect(() => {
-    // Try to get existing session ID from localStorage
-    const existingSessionId = localStorage.getItem("chatSessionId")
-    if (existingSessionId) {
-      setSessionId(existingSessionId)
+    try {
+      // Try to get existing session ID from localStorage
+      const existingSessionId = localStorage.getItem("chatSessionId")
+      if (existingSessionId) {
+        setSessionId(existingSessionId)
 
-      // Load chat history from database
-      const loadChatHistory = async () => {
-        const { success, messages: historyMessages } = await getChatHistory(existingSessionId)
-        if (success && historyMessages && historyMessages.length > 0) {
-          // Add timestamps to messages
-          const messagesWithDates = historyMessages.map((msg: any) => ({
-            ...msg,
-            timestamp: new Date(),
-          }))
-          setMessages(messagesWithDates)
+        // Load chat history from database
+        const loadChatHistory = async () => {
+          try {
+            const { success, messages: historyMessages, error: historyError } = await getChatHistory(existingSessionId)
+
+            if (success && historyMessages && historyMessages.length > 0) {
+              // Add timestamps to messages
+              const messagesWithDates = historyMessages.map((msg: any) => ({
+                ...msg,
+                timestamp: new Date(),
+              }))
+              setMessages(messagesWithDates)
+            } else if (historyError) {
+              console.error("Error loading chat history:", historyError)
+              // Don't set error state here to avoid showing error to user on initial load
+            }
+          } catch (e) {
+            console.error("Exception loading chat history:", e)
+          }
         }
-      }
 
-      loadChatHistory()
-    } else {
-      // Generate a new session ID
+        loadChatHistory()
+      } else {
+        // Generate a new session ID
+        const newSessionId = uuidv4()
+        localStorage.setItem("chatSessionId", newSessionId)
+        setSessionId(newSessionId)
+      }
+    } catch (e) {
+      console.error("Error setting up chat session:", e)
+      // Generate a new session ID as fallback
       const newSessionId = uuidv4()
       localStorage.setItem("chatSessionId", newSessionId)
       setSessionId(newSessionId)
@@ -89,8 +105,12 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
   // Save chat history to localStorage as a fallback
   useEffect(() => {
     if (messages.length > 1) {
-      // Only save if we have more than the initial message
-      localStorage.setItem("chatMessages", JSON.stringify(messages))
+      try {
+        // Only save if we have more than the initial message
+        localStorage.setItem("chatMessages", JSON.stringify(messages))
+      } catch (e) {
+        console.error("Error saving to localStorage:", e)
+      }
     }
   }, [messages])
 
@@ -111,11 +131,13 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
     setIsLoading(true)
 
     try {
-      // Save user message to database
-      await saveChatMessage(sessionId, "user", content)
+      // Save user message to database if we have a valid sessionId
+      if (sessionId) {
+        await saveChatMessage(sessionId, "user", content)
+      }
 
       // Get response from AI
-      const aiResponse = await chat([...messages, userMessage])
+      const aiResponse = await chat([...messages, userMessage], sessionId)
 
       // Check if the response contains the error message
       if (aiResponse.content.includes("Beklager, jeg kunne ikke behandle forespørselen din")) {
@@ -125,8 +147,10 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
       const assistantMessage = { ...aiResponse, timestamp: new Date() }
       setMessages((prev) => [...prev, assistantMessage])
 
-      // Save assistant message to database
-      await saveChatMessage(sessionId, "assistant", aiResponse.content)
+      // Save assistant message to database if we have a valid sessionId
+      if (sessionId) {
+        await saveChatMessage(sessionId, "assistant", aiResponse.content)
+      }
     } catch (error) {
       console.error("Error sending message:", error)
 
@@ -155,12 +179,17 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
 
     setMessages([initialMessage])
     setError(null)
-    localStorage.removeItem("chatMessages")
 
-    // Generate a new session ID
-    const newSessionId = uuidv4()
-    localStorage.setItem("chatSessionId", newSessionId)
-    setSessionId(newSessionId)
+    try {
+      localStorage.removeItem("chatMessages")
+
+      // Generate a new session ID
+      const newSessionId = uuidv4()
+      localStorage.setItem("chatSessionId", newSessionId)
+      setSessionId(newSessionId)
+    } catch (e) {
+      console.error("Error resetting chat:", e)
+    }
   }
 
   // Provide the context value
