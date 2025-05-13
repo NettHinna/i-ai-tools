@@ -1,14 +1,21 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, Check } from "lucide-react"
+import { notFound } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Dette er en statisk demo-side. I en ekte implementasjon ville denne siden
-// hente produktdata basert på slug-parameteren fra en database eller CMS.
+// This is a static demo page. In a real implementation, this page would
+// fetch product data based on the slug parameter from a database or CMS.
 export default function ProductPage({ params }: { params: { slug: string } }) {
-  // For demo-formål bruker vi en hardkodet produkt
+  // For demo purposes, we're using a hardcoded product
+  // In a real app, you would fetch this from your database
+  // If the product doesn't exist, return a 404
+  if (!params.slug || params.slug === "undefined") {
+    notFound()
+  }
+
   const product = {
     id: "ibix-problaster-25-h2o",
     name: "IBIX® Problaster 25 H2O",

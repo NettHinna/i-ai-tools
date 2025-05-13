@@ -150,6 +150,53 @@ export async function getChatHistory(sessionId: string) {
   }
 }
 
+// Add the missing getChatMessages export
+export async function getChatMessages(sessionId: string) {
+  try {
+    // Validate sessionId format
+    if (!sessionId || typeof sessionId !== "string") {
+      console.error("Invalid sessionId format:", sessionId)
+      return {
+        success: false,
+        error: "Invalid session ID format",
+        messages: [],
+      }
+    }
+
+    // Use a try-catch block specifically for the database query
+    try {
+      const messages = await db.query.chatMessages.findMany({
+        where: eq(chatMessages.sessionId, sessionId),
+        orderBy: (chatMessages, { asc }) => [asc(chatMessages.createdAt)],
+      })
+
+      return {
+        success: true,
+        messages: messages.map((msg) => ({
+          id: msg.id.toString(),
+          role: msg.role,
+          content: msg.content,
+          createdAt: msg.createdAt,
+        })),
+      }
+    } catch (dbError) {
+      console.error("Database error getting chat messages:", dbError)
+      return {
+        success: false,
+        error: "Database error: " + (dbError instanceof Error ? dbError.message : "Unknown error"),
+        messages: [],
+      }
+    }
+  } catch (error) {
+    console.error("Error getting chat messages:", error)
+    return {
+      success: false,
+      error: "Failed to get chat messages",
+      messages: [],
+    }
+  }
+}
+
 export async function chat(messages: Message[], sessionId?: string) {
   try {
     // Filter out system messages from the conversation history

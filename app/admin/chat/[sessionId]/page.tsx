@@ -1,57 +1,58 @@
-import { db } from "@/lib/db"
-import { chatMessages } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
-import { formatDistanceToNow } from "date-fns"
-import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
+export const dynamic = "force-dynamic"
+
+import { notFound } from "next/navigation"
+import { getChatMessages } from "@/app/actions/chat"
+import { formatDate } from "@/lib/utils"
 
 export default async function ChatSessionPage({ params }: { params: { sessionId: string } }) {
-  const { sessionId } = params
+  if (!params.sessionId) {
+    notFound()
+  }
 
-  // Fetch chat messages for this session
-  const messages = await db.query.chatMessages.findMany({
-    where: eq(chatMessages.sessionId, sessionId),
-    orderBy: (chatMessages, { asc }) => [asc(chatMessages.createdAt)],
-  })
+  try {
+    const messages = await getChatMessages(params.sessionId)
 
-  return (
-    <div className="flex flex-col min-h-screen pt-24">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <Link href="/admin/chat" className="inline-flex items-center text-primary-600 hover:text-primary-800">
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Back to Chat Sessions
-            </Link>
+    if (!messages || messages.length === 0) {
+      return (
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-2xl font-semibold mb-6">Chat Session: {params.sessionId}</h1>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+            <p className="text-yellow-800">No messages found for this session.</p>
           </div>
+        </div>
+      )
+    }
 
-          <h1 className="text-2xl font-semibold mb-2">Chat Session: {sessionId.substring(0, 8)}...</h1>
-          <p className="text-gray-600 mb-8">Viewing all messages for this chat session.</p>
-
-          {messages.length === 0 ? (
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-              <p className="text-gray-500">No messages found for this session.</p>
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-semibold mb-6">Chat Session: {params.sessionId}</h1>
+        <div className="space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`p-4 rounded-lg ${
+                message.role === "user" ? "bg-blue-50 border border-blue-100" : "bg-gray-50 border border-gray-100"
+              }`}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <span className="font-medium">{message.role === "user" ? "User" : "Assistant"}</span>
+                <span className="text-xs text-gray-500">{formatDate(message.created_at)}</span>
+              </div>
+              <p className="whitespace-pre-wrap">{message.content}</p>
             </div>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`p-4 rounded-lg ${message.role === "user" ? "bg-gray-100 ml-12" : "bg-primary-50 mr-12"}`}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="font-medium capitalize">{message.role}</span>
-                    <span className="text-xs text-gray-500">
-                      {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
-                    </span>
-                  </div>
-                  <p className="text-gray-800 whitespace-pre-wrap">{message.content}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          ))}
         </div>
       </div>
-    </div>
-  )
+    )
+  } catch (error) {
+    console.error("Error fetching chat messages:", error)
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-semibold mb-6">Chat Session: {params.sessionId}</h1>
+        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+          <p className="text-red-800">Error loading chat messages. Please try again later.</p>
+        </div>
+      </div>
+    )
+  }
 }
