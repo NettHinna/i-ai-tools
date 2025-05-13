@@ -2,11 +2,23 @@ import { db } from "@/lib/db"
 import { formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 
+// Make this page dynamic to prevent prerendering during build
+export const dynamic = "force-dynamic"
+
 export default async function ChatPage() {
-  // Fetch chat sessions from the database
-  const sessions = await db.query.chatSessions.findMany({
-    orderBy: (chatSessions, { desc }) => [desc(chatSessions.updatedAt)],
-  })
+  // Add error handling for database queries
+  let sessions = []
+  let error = null
+
+  try {
+    // Fetch chat sessions from the database
+    sessions = await db.query.chatSessions.findMany({
+      orderBy: (chatSessions, { desc }) => [desc(chatSessions.updatedAt)],
+    })
+  } catch (e) {
+    console.error("Error fetching chat sessions:", e)
+    error = e instanceof Error ? e.message : "Unknown error fetching chat sessions"
+  }
 
   return (
     <div className="flex flex-col min-h-screen pt-24">
@@ -15,7 +27,17 @@ export default async function ChatPage() {
           <h1 className="text-2xl font-semibold mb-2">Chat Sessions</h1>
           <p className="text-gray-600 mb-8">View and manage chat sessions from your website.</p>
 
-          {sessions.length === 0 ? (
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
+              <h3 className="font-medium">Error loading chat sessions</h3>
+              <p className="text-sm">{error}</p>
+              <p className="text-sm mt-2">
+                This could be due to a database connection issue. Please check your database configuration.
+              </p>
+            </div>
+          )}
+
+          {!error && sessions.length === 0 ? (
             <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-500">No chat sessions found.</p>
               <p className="text-gray-500 mt-2">
