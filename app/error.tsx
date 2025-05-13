@@ -29,14 +29,6 @@ export default function Error({
             <Button variant="outline">Gå til forsiden</Button>
           </Link>
         </div>
-        {process.env.NODE_ENV === "development" && (
-          <div className="mt-6 text-left p-4 bg-gray-100 rounded-md overflow-auto max-h-60">
-            <p className="text-sm font-mono text-gray-800">{error.message}</p>
-            {error.stack && (
-              <pre className="text-xs font-mono text-gray-700 mt-2 whitespace-pre-wrap">{error.stack}</pre>
-            )}
-          </div>
-        )}
       </div>
     </div>
   )

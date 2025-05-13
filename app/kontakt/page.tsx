@@ -1,7 +1,8 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
-import { submitContactForm } from "@/app/actions/contact"
 import { Loader2 } from "lucide-react"
 
 export default function ContactPage() {
@@ -11,21 +12,21 @@ export default function ContactPage() {
     message?: string
   } | null>(null)
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     setIsSubmitting(true)
     setFormStatus(null)
 
-    try {
-      const result = await submitContactForm(formData)
-      setFormStatus(result)
-    } catch (error) {
+    // Simulate form submission
+    setTimeout(() => {
       setFormStatus({
-        success: false,
-        message: "Det oppstod en feil. Vennligst prøv igjen senere.",
+        success: true,
+        message: "Takk for din henvendelse! Vi vil kontakte deg snart.",
       })
-    } finally {
       setIsSubmitting(false)
-    }
+      // Reset form
+      e.currentTarget.reset()
+    }, 1500)
   }
 
   return (
@@ -53,7 +54,7 @@ export default function ContactPage() {
                 telefonnummeret til høyre.
               </p>
 
-              <form action={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="form-label">
@@ -108,7 +109,7 @@ export default function ContactPage() {
                 <button type="submit" className="form-button" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 inline-block animate-spin" />
                       Sender...
                     </>
                   ) : (

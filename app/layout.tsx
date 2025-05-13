@@ -4,8 +4,7 @@ import { Inter, Outfit } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import { EnhancedChatProvider } from "@/components/chat/enhanced-chat-context"
-import ContextChatWidget from "@/components/chat/context-chat-widget"
+import SimpleChatWidget from "@/components/chat/simple-chat-widget"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,12 +35,10 @@ export default function RootLayout({
   return (
     <html lang="nb">
       <body className={`${inter.variable} ${outfit.variable} font-sans relative`}>
-        <EnhancedChatProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <ContextChatWidget />
-        </EnhancedChatProvider>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+        <SimpleChatWidget />
       </body>
     </html>
   )
