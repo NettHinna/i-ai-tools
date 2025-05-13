@@ -1,11 +1,22 @@
 import { db } from "@/lib/db"
 import { formatDistanceToNow } from "date-fns"
 
+// Make this page dynamic to prevent prerendering during build
+export const dynamic = "force-dynamic"
+
 export default async function ContactsPage() {
-  // Fetch contact submissions from the database
-  const submissions = await db.query.contactSubmissions.findMany({
-    orderBy: (contactSubmissions, { desc }) => [desc(contactSubmissions.id)],
-  })
+  // Fetch contact submissions from the database with error handling
+  let submissions = []
+  let error = null
+
+  try {
+    submissions = await db.query.contactSubmissions.findMany({
+      orderBy: (contactSubmissions, { desc }) => [desc(contactSubmissions.id)],
+    })
+  } catch (err) {
+    console.error("Error fetching contact submissions:", err)
+    error = "Could not connect to the database. Please try again later."
+  }
 
   return (
     <div className="flex flex-col min-h-screen pt-24">
@@ -14,7 +25,13 @@ export default async function ContactsPage() {
           <h1 className="text-2xl font-semibold mb-2">Contact Submissions</h1>
           <p className="text-gray-600 mb-8">View and manage contact form submissions from your website.</p>
 
-          {submissions.length === 0 ? (
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+              <p>{error}</p>
+            </div>
+          )}
+
+          {!error && submissions.length === 0 ? (
             <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
               <p className="text-gray-500">No contact submissions found.</p>
               <p className="text-gray-500 mt-2">
