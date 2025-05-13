@@ -1,20 +1,23 @@
 import type { Config } from "tailwindcss"
+
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "app/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        heading: ["var(--font-outfit)", "system-ui", "sans-serif"],
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
       },
+    },
+    extend: {
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -22,34 +25,34 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
+          50: "#f0f9ff",
+          100: "#e0f2fe",
+          200: "#bae6fd",
+          300: "#7dd3fc",
+          400: "#38bdf8",
+          500: "#0ea5e9",
+          600: "#0284c7",
+          700: "#0369a1",
+          800: "#075985",
+          900: "#0c4a6e",
+          950: "#082f49",
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          50: "#FEF2F2",
-          100: "#FEE2E2",
-          200: "#FECACA",
-          300: "#FCA5A5",
-          400: "#F87171",
-          500: "#EF4444",
-          600: "#DC2626", // Base red
-          700: "#B91C1C", // Improved contrast for text
-          800: "#991B1B", // Improved contrast for hover states
-          900: "#7F1D1D",
-          950: "#450A0A",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-          50: "#F8FAFC",
-          100: "#F1F5F9",
-          200: "#E2E8F0",
-          300: "#CBD5E1",
-          400: "#94A3B8",
-          500: "#64748B",
+          50: "#f8fafc",
+          100: "#f1f5f9",
+          200: "#e2e8f0",
+          300: "#cbd5e1",
+          400: "#94a3b8",
+          500: "#64748b",
           600: "#475569",
           700: "#334155",
-          800: "#1E293B", // Base dark blue
-          900: "#0F172A", // Darker for better contrast
+          800: "#1e293b",
+          900: "#0f172a",
           950: "#020617",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -71,18 +74,6 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gray: {
-          50: "#F9FAFB",
-          100: "#F3F4F6",
-          200: "#E5E7EB",
-          300: "#D1D5DB",
-          400: "#9CA3AF",
-          500: "#6B7280",
-          600: "#4B5563",
-          700: "#374151", // Improved for body text
-          800: "#1F2937",
-          900: "#111827", // Improved for headings
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -103,49 +94,13 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      spacing: {
-        "128": "32rem",
-      },
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: "65ch",
-            color: "#374151",
-            lineHeight: "1.6",
-            p: {
-              marginTop: "1.25em",
-              marginBottom: "1.25em",
-              fontWeight: "300",
-            },
-            a: {
-              color: "#DC2626",
-              "&:hover": {
-                color: "#B91C1C",
-              },
-            },
-            h1: {
-              fontWeight: "600",
-              lineHeight: "1.2",
-              marginTop: "0",
-              marginBottom: "0.8em",
-            },
-            h2: {
-              fontWeight: "600",
-              lineHeight: "1.2",
-              marginTop: "1.6em",
-              marginBottom: "0.8em",
-            },
-            h3: {
-              fontWeight: "600",
-              lineHeight: "1.3",
-              marginTop: "1.5em",
-              marginBottom: "0.7em",
-            },
-          },
-        },
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+        outfit: ["var(--font-outfit)"],
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 }
+
 export default config

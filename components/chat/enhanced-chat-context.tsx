@@ -9,9 +9,11 @@ import { getSupabaseClient } from "@/lib/supabase/client"
 
 export type ChatMessage = Message & { timestamp?: Date }
 
-interface ChatContextType {
-  messages: ChatMessage[]
+type EnhancedChatContextType = {
+  messages: Message[]
+  addMessage: (message: Message) => void
   isLoading: boolean
+  setIsLoading: (loading: boolean) => void
   error: string | null
   sendMessage: (content: string) => Promise<void>
   resetChat: () => void
@@ -20,17 +22,10 @@ interface ChatContextType {
 }
 
 // Create the context with a default undefined value
-const EnhancedChatContext = createContext<ChatContextType | undefined>(undefined)
+const EnhancedChatContext = createContext<EnhancedChatContextType | undefined>(undefined)
 
 export function EnhancedChatProvider({ children }: { children: React.ReactNode }) {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: "Hei! Hvordan kan jeg hjelpe deg i dag? / Hello! How can I help you today?",
-      timestamp: new Date(),
-    },
-  ])
+  const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -114,6 +109,10 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
     }
   }, [messages])
 
+  const addMessage = (message: Message) => {
+    setMessages((prev) => [...prev, message])
+  }
+
   const sendMessage = async (content: string) => {
     if (!content.trim() || isLoading) return
 
@@ -193,9 +192,11 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
   }
 
   // Provide the context value
-  const contextValue: ChatContextType = {
+  const contextValue: EnhancedChatContextType = {
     messages,
+    addMessage,
     isLoading,
+    setIsLoading,
     error,
     sendMessage,
     resetChat,
@@ -209,7 +210,7 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
 export function useEnhancedChat() {
   const context = useContext(EnhancedChatContext)
   if (context === undefined) {
-    throw new Error("useEnhancedChat must be used within an EnhancedChatProvider")
+    throw new Error("useEnhancedChat must be used within a EnhancedChatProvider")
   }
   return context
 }
