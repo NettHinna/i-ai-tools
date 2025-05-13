@@ -2,9 +2,10 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
-import type { Message } from "@/app/api/chat/action"
-import { enhancedChat } from "@/app/api/chat/enhanced-action"
+import type { Message } from "@/app/actions/chat"
+import { chat, getChatHistory, saveChatMessage } from "@/app/actions/chat"
 import { v4 as uuidv4 } from "uuid"
+import { getSupabaseClient } from "@/lib/supabase/client"
 
 export type ChatMessage = Message & { timestamp?: Date }
 
@@ -34,6 +35,27 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string>("")
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const supabase = getSupabaseClient()
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession()
+      setIsAuthenticated(!!data.session)
+
+      // Set up auth state change listener
+      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        setIsAuthenticated(!!session)
+      })
+
+      return () => {
+        authListener.subscription.unsubscribe()
+      }
+    }
+
+    checkAuth()
+  }, [supabase.auth])
 
   // Generate a session ID for the chat
   useEffect(() => {
@@ -41,29 +63,26 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
     const existingSessionId = localStorage.getItem("chatSessionId")
     if (existingSessionId) {
       setSessionId(existingSessionId)
+
+      // Load chat history from database
+      const loadChatHistory = async () => {
+        const { success, messages: historyMessages } = await getChatHistory(existingSessionId)
+        if (success && historyMessages && historyMessages.length > 0) {
+          // Add timestamps to messages
+          const messagesWithDates = historyMessages.map((msg: any) => ({
+            ...msg,
+            timestamp: new Date(),
+          }))
+          setMessages(messagesWithDates)
+        }
+      }
+
+      loadChatHistory()
     } else {
       // Generate a new session ID
       const newSessionId = uuidv4()
       localStorage.setItem("chatSessionId", newSessionId)
       setSessionId(newSessionId)
-    }
-  }, [])
-
-  // Load chat history from localStorage as a fallback
-  useEffect(() => {
-    const savedMessages = localStorage.getItem("chatMessages")
-    if (savedMessages) {
-      try {
-        const parsedMessages = JSON.parse(savedMessages)
-        // Convert string timestamps back to Date objects
-        const messagesWithDates = parsedMessages.map((msg: any) => ({
-          ...msg,
-          timestamp: msg.timestamp ? new Date(msg.timestamp) : undefined,
-        }))
-        setMessages(messagesWithDates)
-      } catch (e) {
-        console.error("Failed to parse saved messages:", e)
-      }
     }
   }, [])
 
@@ -92,8 +111,11 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
     setIsLoading(true)
 
     try {
-      // Get response from AI using the enhanced chat action
-      const aiResponse = await enhancedChat([...messages, userMessage])
+      // Save user message to database
+      await saveChatMessage(sessionId, "user", content)
+
+      // Get response from AI
+      const aiResponse = await chat([...messages, userMessage])
 
       // Check if the response contains the error message
       if (aiResponse.content.includes("Beklager, jeg kunne ikke behandle forespørselen din")) {
@@ -103,7 +125,8 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
       const assistantMessage = { ...aiResponse, timestamp: new Date() }
       setMessages((prev) => [...prev, assistantMessage])
 
-      // We don't need to manually save to Redis here as we're using localStorage as a fallback
+      // Save assistant message to database
+      await saveChatMessage(sessionId, "assistant", aiResponse.content)
     } catch (error) {
       console.error("Error sending message:", error)
 
@@ -122,7 +145,7 @@ export function EnhancedChatProvider({ children }: { children: React.ReactNode }
     }
   }
 
-  const resetChat = () => {
+  const resetChat = async () => {
     const initialMessage = {
       id: "1",
       role: "assistant",

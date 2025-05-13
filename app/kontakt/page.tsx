@@ -1,381 +1,177 @@
 "use client"
 
-import type React from "react"
-
-import { Mail, MapPin, Phone } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { useState, type FormEvent } from "react"
+import { useState } from "react"
+import { submitContactForm } from "@/app/actions/contact"
+import { Loader2 } from "lucide-react"
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  })
-
-  const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [formStatus, setFormStatus] = useState<{
+    success?: boolean
+    message?: string
+  } | null>(null)
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {}
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Navn er påkrevd / Name is required"
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "E-post er påkrevd / Email is required"
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Ugyldig e-postadresse / Invalid email address"
-    }
-
-    if (!formData.subject.trim()) {
-      newErrors.subject = "Emne er påkrevd / Subject is required"
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Melding er påkrevd / Message is required"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[name]
-        return newErrors
-      })
-    }
-  }
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-
-    if (!validateForm()) return
-
+  async function handleSubmit(formData: FormData) {
     setIsSubmitting(true)
+    setFormStatus(null)
 
     try {
-      // Simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // In a real implementation, you would send the form data to your server
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // })
-
-      setSubmitStatus("success")
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-      })
+      const result = await submitContactForm(formData)
+      setFormStatus(result)
     } catch (error) {
-      console.error("Error submitting form:", error)
-      setSubmitStatus("error")
+      setFormStatus({
+        success: false,
+        message: "Det oppstod en feil. Vennligst prøv igjen senere.",
+      })
     } finally {
       setIsSubmitting(false)
-
-      // Reset status after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus("idle")
-      }, 5000)
     }
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="bg-secondary-800 text-white relative">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%286%29-XaPI1VRqmQPLtpYlncbxkzHK4GS6IH.jpeg"
-            alt="Industrihall med blått lys"
-            fill
-            className="object-cover opacity-20"
-          />
-        </div>
-        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-          <div className="flex items-center gap-2 mb-4">
-            <Link href="/" className="text-gray-300 hover:text-white">
-              Hjem
-            </Link>
-            <span className="text-gray-400">/</span>
-            <span>Kontakt</span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl font-bold mb-8">Kontakt oss</h1>
-
-          <div className="max-w-2xl">
-            <p className="text-xl mb-6">
-              Vi er her for å svare på spørsmål om våre produkter, tjenester eller for å gi deg et uforpliktende tilbud.
+      <section className="bg-secondary-800 text-white py-12 md:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-3xl md:text-4xl font-semibold mb-4">Kontakt oss</h1>
+            <p className="text-lg text-gray-200 font-light">
+              Har du spørsmål om våre produkter eller tjenester? Ta kontakt med oss i dag.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Contact Form and Info */}
-      <section className="w-full py-12 md:py-24 bg-white">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="grid md:grid-cols-2 gap-12">
+      {/* Contact Form Section */}
+      <section className="py-12 md:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
-              <h2 className="text-2xl font-bold mb-6">Send oss en melding</h2>
+              <h2 className="text-2xl font-semibold mb-6">Send oss en melding</h2>
+              <p className="text-gray-600 mb-8 font-light">
+                Fyll ut skjemaet under, så vil vi kontakte deg så snart som mulig. Du kan også ringe oss direkte på
+                telefonnummeret til høyre.
+              </p>
 
-              {submitStatus === "success" && (
-                <div className="mb-6 p-4 bg-green-50 text-green-800 rounded-md">
-                  Takk for din henvendelse! Vi vil kontakte deg så snart som mulig. / Thank you for your message! We
-                  will contact you as soon as possible.
-                </div>
-              )}
-
-              {submitStatus === "error" && (
-                <div className="mb-6 p-4 bg-red-50 text-red-800 rounded-md">
-                  Det oppstod en feil ved sending av skjemaet. Vennligst prøv igjen senere. / An error occurred while
-                  submitting the form. Please try again later.
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form action={handleSubmit} className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Navn*
+                    <label htmlFor="name" className="form-label">
+                      Navn *
                     </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-primary-600`}
-                    />
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                    <input type="text" id="name" name="name" required className="form-input" placeholder="Ditt navn" />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      E-post*
+                    <label htmlFor="email" className="form-label">
+                      E-post *
                     </label>
                     <input
                       type="email"
                       id="email"
                       name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-primary-600`}
+                      required
+                      className="form-input"
+                      placeholder="din.epost@eksempel.no"
                     />
-                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                   </div>
                 </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Telefon
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-600"
-                  />
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="phone" className="form-label">
+                      Telefon
+                    </label>
+                    <input type="tel" id="phone" name="phone" className="form-input" placeholder="Ditt telefonnummer" />
+                  </div>
+                  <div>
+                    <label htmlFor="company" className="form-label">
+                      Firma
+                    </label>
+                    <input type="text" id="company" name="company" className="form-input" placeholder="Ditt firma" />
+                  </div>
                 </div>
+
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                    Emne*
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className={`w-full px-3 py-2 border ${errors.subject ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-primary-600`}
-                  />
-                  {errors.subject && <p className="mt-1 text-sm text-red-600">{errors.subject}</p>}
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                    Melding*
+                  <label htmlFor="message" className="form-label">
+                    Melding *
                   </label>
                   <textarea
                     id="message"
                     name="message"
-                    value={formData.message}
-                    onChange={handleChange}
                     rows={5}
-                    className={`w-full px-3 py-2 border ${errors.message ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-primary-600`}
+                    required
+                    className="form-input"
+                    placeholder="Skriv din melding her..."
                   ></textarea>
-                  {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
                 </div>
-                <button
-                  type="submit"
-                  className="btn-primary flex items-center justify-center min-w-[120px]"
-                  disabled={isSubmitting}
-                >
+
+                <button type="submit" className="form-button" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Sender...
                     </>
                   ) : (
                     "Send melding"
                   )}
                 </button>
+
+                {formStatus && (
+                  <div
+                    className={`p-4 rounded-md ${
+                      formStatus.success ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"
+                    }`}
+                  >
+                    {formStatus.message}
+                  </div>
+                )}
               </form>
             </div>
 
-            {/* Rest of the component remains the same */}
-            <div>
-              <div className="relative rounded-lg overflow-hidden mb-8 h-64">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%283%29-RrXNXQiS0K518yqePzzEmZ1K5n8cJt.jpeg"
-                  alt="Fagfolk i arbeid"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <h2 className="text-2xl font-bold mb-6">Kontaktinformasjon</h2>
+            <div className="bg-gray-50 p-6 md:p-8 rounded-lg">
+              <h2 className="text-2xl font-semibold mb-6">Kontaktinformasjon</h2>
+
               <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary-100 p-3 rounded-full text-primary-600">
-                    <MapPin className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">Besøksadresse</h3>
-                    <p className="text-gray-600">
-                      Derksen Trading AS
-                      <br />
-                      Industriveien 123
-                      <br />
-                      8013 Bodø
-                    </p>
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Adresse</h3>
+                  <p className="text-gray-600 font-light">Industriveien 123, 8013 Bodø, Norge</p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Telefon</h3>
+                  <p className="text-gray-600 font-light">+47 123 45 678</p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-2">E-post</h3>
+                  <p className="text-gray-600 font-light">post@derksentrading.no</p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Åpningstider</h3>
+                  <div className="text-gray-600 font-light">
+                    <p>Mandag - Fredag: 08:00 - 16:00</p>
+                    <p>Lørdag - Søndag: Stengt</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary-100 p-3 rounded-full text-primary-600">
-                    <Phone className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">Telefon</h3>
-                    <p className="text-gray-600">+47 123 45 678</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary-100 p-3 rounded-full text-primary-600">
-                    <Mail className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">E-post</h3>
-                    <p className="text-gray-600">post@derksentrading.no</p>
-                  </div>
-                </div>
-                <div className="mt-8">
-                  <h3 className="font-bold text-lg mb-2">Åpningstider</h3>
-                  <table className="w-full">
-                    <tbody>
-                      <tr>
-                        <td className="py-1 pr-4 font-medium">Mandag - Fredag:</td>
-                        <td className="py-1">08:00 - 16:00</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1 pr-4 font-medium">Lørdag:</td>
-                        <td className="py-1">Stengt</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1 pr-4 font-medium">Søndag:</td>
-                        <td className="py-1">Stengt</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-lg font-medium mb-4">Finn oss på kartet</h3>
+                <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1413.9572060874938!2d14.404916716440599!3d67.28015089999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x45df10403501b2a5%3A0x4c3c7ba3a3a3a3a3!2sBod%C3%B8%2C%20Norway!5e0!3m2!1sen!2sus!4v1620123456789!5m2!1sen!2sus"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={false}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Kart til Derksen Trading"
+                  ></iframe>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Rest of the component remains the same */}
-      <section className="w-full py-12 md:py-24 bg-gray-50">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Finn oss</h2>
-            <p className="mt-4 text-gray-600 md:text-xl max-w-3xl mx-auto">
-              Vi holder til sentralt i Bodø med god tilgjengelighet
-            </p>
-          </div>
-          <div className="aspect-[16/9] w-full bg-gray-200 rounded-lg overflow-hidden">
-            <div className="w-full h-full relative">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%281%29-zkENcnsyrCFhf2UzR3yIaCiPxMt6KL.jpeg"
-                alt="Kart over Derksen Trading AS lokasjon"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-secondary-900/30 flex items-center justify-center">
-                <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <p className="font-bold">Derksen Trading AS</p>
-                  <p>Industriveien 123, 8013 Bodø</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-secondary-800 text-white py-16 relative">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%281%29-zkENcnsyrCFhf2UzR3yIaCiPxMt6KL.jpeg"
-            alt="Industrianlegg"
-            fill
-            className="object-cover opacity-20"
-          />
-        </div>
-        <div className="container px-4 md:px-6 mx-auto text-center relative z-10">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
-            Trenger du hjelp med et prosjekt?
-          </h2>
-          <p className="mt-4 text-gray-300 md:text-xl max-w-3xl mx-auto mb-8">
-            Vi tilbyr både salg, utleie og tjenester innen sandblåsing og overflatebehandling. Kontakt oss for en
-            uforpliktende samtale om ditt prosjekt.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-primary px-8">Ring oss: +47 123 45 678</button>
-            <button className="btn-outline px-8">Send e-post</button>
           </div>
         </div>
       </section>

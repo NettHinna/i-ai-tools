@@ -1,9 +1,132 @@
+"use client"
+
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import ImageWithFallback from "@/components/image-with-fallback"
+import ProductFilter from "@/components/product-filter"
+
+// Sample product data
+const products = [
+  {
+    id: "ibix-9-basic",
+    name: "IBIX® 9 Basic",
+    description: "9L tørrblåser, superlett (12kg), ypperlig for småskala arbeid og hobby (bilrestaurering etc.).",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%283%29-RrXNXQiS0K518yqePzzEmZ1K5n8cJt.jpeg",
+    category: "dry",
+    size: "small",
+    price: "low",
+  },
+  {
+    id: "ibix-25-basic",
+    name: "IBIX® 25 Basic",
+    description: "25L tørrblåser, kompakt og effektiv, ideell for mellomstore prosjekter og profesjonell bruk.",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%288%29-leWLEemyqrjW3sNhfc9utbaCN2hqs0.jpeg",
+    category: "dry",
+    size: "medium",
+    price: "medium",
+  },
+  {
+    id: "ibix-problaster-25-h2o",
+    name: "IBIX® Problaster 25 H2O",
+    description: "25L kombiblåser, allsidig og kompakt, yter som en stor tradisjonell potte men veier kun 28kg.",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%286%29-XaPI1VRqmQPLtpYlncbxkzHK4GS6IH.jpeg",
+    category: "wet",
+    size: "medium",
+    price: "medium",
+  },
+  {
+    id: "ibix-problaster-40-h2o",
+    name: "IBIX® Problaster 40 H2O",
+    description: "40L kombiblåser, kraftig og effektiv, for større prosjekter med behov for lengre driftstid.",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%288%29-leWLEemyqrjW3sNhfc9utbaCN2hqs0.jpeg",
+    category: "wet",
+    size: "large",
+    price: "high",
+  },
+  {
+    id: "ibix-problaster-60-h2o",
+    name: "IBIX® Problaster 60 H2O",
+    description: "60 liter kombiblåser, for proff bruk, ~45 kg, HiPower dobbel lufttilførsel for maks effekt.",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%284%29-glZcVxwSM9VSqQWgANYueBE4azT9zU.jpeg",
+    category: "wet",
+    size: "large",
+    price: "high",
+  },
+  {
+    id: "ibix-helix-dyse",
+    name: "IBIX® Helix dyse",
+    description: "Patentert roterende dyse for 30% raskere rengjøring og skånsom behandling.",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%286%29-XaPI1VRqmQPLtpYlncbxkzHK4GS6IH.jpeg",
+    category: "accessory",
+    size: "small",
+    price: "low",
+  },
+]
+
+// Filter categories
+const filterCategories = [
+  {
+    id: "category",
+    name: "Kategori",
+    options: [
+      { id: "dry", label: "Tørr sandblåsing" },
+      { id: "wet", label: "Våt sandblåsing" },
+      { id: "accessory", label: "Tilbehør" },
+    ],
+  },
+  {
+    id: "size",
+    name: "Størrelse",
+    options: [
+      { id: "small", label: "Liten" },
+      { id: "medium", label: "Medium" },
+      { id: "large", label: "Stor" },
+    ],
+  },
+  {
+    id: "price",
+    name: "Prisklasse",
+    options: [
+      { id: "low", label: "Lav" },
+      { id: "medium", label: "Medium" },
+      { id: "high", label: "Høy" },
+    ],
+  },
+]
 
 export default function ProductsPage() {
+  const [filters, setFilters] = useState<Record<string, string[]>>({})
+  const [searchQuery, setSearchQuery] = useState("")
+
+  // Filter products based on selected filters and search query
+  const filteredProducts = products.filter((product) => {
+    // Check if product matches all selected filters
+    for (const [category, selectedOptions] of Object.entries(filters)) {
+      if (
+        selectedOptions.length > 0 &&
+        !selectedOptions.includes(product[category as keyof typeof product] as string)
+      ) {
+        return false
+      }
+    }
+
+    // Check if product matches search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      return product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query)
+    }
+
+    return true
+  })
+
   return (
     <div className="flex flex-col min-h-screen pt-16">
       {/* Hero Section */}
@@ -51,9 +174,7 @@ export default function ProductsPage() {
       {/* Product Categories */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6">Produktkategorier</h2>
-
-          <div className="flex flex-wrap gap-2 mb-12">
+          <div className="flex flex-wrap gap-2 mb-8">
             <span className="tag">Tørr sandblåsing</span>
             <span className="tag">Våt sandblåsing</span>
             <span className="tag">Tilbehør</span>
@@ -62,191 +183,76 @@ export default function ProductsPage() {
             <span className="tag">Blåsemidler</span>
           </div>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">Våre produkter</h2>
-          <p className="text-gray-600 mb-8 font-light">
-            Derksen Trading tilbyr et komplett utvalg av IBIX sandblåsere og tilbehør for alle typer
-            overflatebehandling.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Product Card 1 */}
-            <div className="modern-card">
-              <div className="aspect-video relative">
-                <ImageWithFallback
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%283%29-RrXNXQiS0K518yqePzzEmZ1K5n8cJt.jpeg"
-                  alt="IBIX 9 Basic sandblåser i bruk med profesjonell operatør iført verneutstyr"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 overlay-gradient-bottom"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    Tørr sandblåsing
-                  </span>
+          <div className="grid md:grid-cols-4 gap-8">
+            {/* Sidebar with filters */}
+            <div className="md:col-span-1">
+              <div className="sticky top-24">
+                <div className="mb-6">
+                  <label htmlFor="search" className="form-label">
+                    Søk etter produkter
+                  </label>
+                  <input
+                    type="text"
+                    id="search"
+                    className="form-input"
+                    placeholder="Søk..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">IBIX® 9 Basic</h3>
-                <p className="text-gray-600 mb-4 font-light">
-                  9L tørrblåser, superlett (12kg), ypperlig for småskala arbeid og hobby (bilrestaurering etc.).
-                </p>
-                <Link
-                  href="/produkter/ibix-9-basic"
-                  className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
-                >
-                  Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
+
+                <ProductFilter categories={filterCategories} onFilterChange={setFilters} />
               </div>
             </div>
 
-            {/* Product Card 2 */}
-            <div className="modern-card">
-              <div className="aspect-video relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%288%29-leWLEemyqrjW3sNhfc9utbaCN2hqs0.jpeg"
-                  alt="Sandblåsing med gnister"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 overlay-gradient-bottom"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    Tørr sandblåsing
-                  </span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">IBIX® 25 Basic</h3>
-                <p className="text-gray-600 mb-4 font-light">
-                  25L tørrblåser, kompakt og effektiv, ideell for mellomstore prosjekter og profesjonell bruk.
-                </p>
-                <Link
-                  href="/produkter/ibix-25-basic"
-                  className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
-                >
-                  Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
-            </div>
+            {/* Product grid */}
+            <div className="md:col-span-3">
+              <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">Våre produkter</h2>
+              <p className="text-gray-600 mb-8 font-light">
+                Derksen Trading tilbyr et komplett utvalg av IBIX sandblåsere og tilbehør for alle typer
+                overflatebehandling.
+              </p>
 
-            {/* Product Card 3 */}
-            <div className="modern-card">
-              <div className="aspect-video relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%286%29-XaPI1VRqmQPLtpYlncbxkzHK4GS6IH.jpeg"
-                  alt="Sveising med blått lys"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 overlay-gradient-bottom"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    Våt sandblåsing
-                  </span>
+              {filteredProducts.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 font-light">Ingen produkter funnet. Prøv å justere filtrene.</p>
                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">IBIX® Problaster 25 H2O</h3>
-                <p className="text-gray-600 mb-4 font-light">
-                  25L kombiblåser, allsidig og kompakt, yter som en stor tradisjonell potte men veier kun 28kg.
-                </p>
-                <Link
-                  href="/produkter/ibix-problaster-25-h2o"
-                  className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
-                >
-                  Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Product Card 4 */}
-            <div className="modern-card">
-              <div className="aspect-video relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%288%29-leWLEemyqrjW3sNhfc9utbaCN2hqs0.jpeg"
-                  alt="Presisjonsutstyr i blått lys"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 overlay-gradient-bottom"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    Våt sandblåsing
-                  </span>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((product) => (
+                    <div key={product.id} className="modern-card">
+                      <div className="aspect-video relative">
+                        <Image
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 overlay-gradient-bottom"></div>
+                        <div className="absolute top-4 left-4">
+                          <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            {product.category === "dry"
+                              ? "Tørr sandblåsing"
+                              : product.category === "wet"
+                                ? "Våt sandblåsing"
+                                : "Tilbehør"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+                        <p className="text-gray-600 mb-4 font-light">{product.description}</p>
+                        <Link
+                          href={`/produkter/${product.id}`}
+                          className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
+                        >
+                          Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">IBIX® Problaster 40 H2O</h3>
-                <p className="text-gray-600 mb-4 font-light">
-                  40L kombiblåser, kraftig og effektiv, for større prosjekter med behov for lengre driftstid.
-                </p>
-                <Link
-                  href="/produkter/ibix-problaster-40-h2o"
-                  className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
-                >
-                  Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Product Card 5 */}
-            <div className="modern-card">
-              <div className="aspect-video relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%284%29-glZcVxwSM9VSqQWgANYueBE4azT9zU.jpeg"
-                  alt="Containerskip i havn"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 overlay-gradient-bottom"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    Våt sandblåsing
-                  </span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">IBIX® Problaster 60 H2O</h3>
-                <p className="text-gray-600 mb-4 font-light">
-                  60 liter kombiblåser, for proff bruk, ~45 kg, HiPower dobbel lufttilførsel for maks effekt.
-                </p>
-                <Link
-                  href="/produkter/ibix-problaster-60-h2o"
-                  className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
-                >
-                  Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Product Card 6 */}
-            <div className="modern-card">
-              <div className="aspect-video relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sandbl%C3%A5ser%20%286%29-XaPI1VRqmQPLtpYlncbxkzHK4GS6IH.jpeg"
-                  alt="Industrihall med blått lys"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 overlay-gradient-bottom"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary-50 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    Tilbehør
-                  </span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">IBIX® Helix dyse</h3>
-                <p className="text-gray-600 mb-4 font-light">
-                  Patentert roterende dyse for 30% raskere rengjøring og skånsom behandling.
-                </p>
-                <Link
-                  href="/produkter/tilbehor/helix-dyse"
-                  className="text-primary-700 hover:text-primary-800 font-medium inline-flex items-center"
-                >
-                  Se detaljer <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
+              )}
             </div>
           </div>
         </div>

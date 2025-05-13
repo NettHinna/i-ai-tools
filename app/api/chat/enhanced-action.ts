@@ -1,7 +1,8 @@
 "use server"
 
 import { generateText } from "ai"
-import { groq } from "@ai-sdk/groq"
+import { models } from "@/lib/ai/models"
+import { saveChatHistory } from "@/lib/redis"
 
 // This type defines the structure of our chat messages
 export type Message = {
@@ -122,7 +123,7 @@ Here is detailed information about the company, its products and services:
 ${websiteInfo}
 `
 
-export async function enhancedChat(messages: Message[]) {
+export async function enhancedChat(messages: Message[], sessionId?: string) {
   try {
     // Filter out system messages from the conversation history
     const conversationHistory = messages.filter((message) => message.role !== "system")
@@ -136,19 +137,33 @@ export async function enhancedChat(messages: Message[]) {
       })),
     ]
 
-    // Generate a response using Groq instead of OpenAI
+    // Determine which model to use based on message content
+    // Use DeepInfra for shorter, simpler queries and Groq for more complex ones
+    const isComplexQuery =
+      conversationHistory.length > 3 || conversationHistory[conversationHistory.length - 1]?.content.length > 100
+
+    const model = isComplexQuery ? models.groqLlama3 : models.deepInfraLlama3
+
+    // Generate a response using the selected model
     const response = await generateText({
-      model: groq("llama3-70b-8192"),
+      model,
       messages: aiMessages,
       temperature: 0.7,
       maxTokens: 800,
     })
 
-    return {
+    const assistantMessage = {
       id: Date.now().toString(),
       role: "assistant" as const,
       content: response.text,
     }
+
+    // Save chat history to Redis if sessionId is provided
+    if (sessionId) {
+      await saveChatHistory(sessionId, [...conversationHistory, assistantMessage])
+    }
+
+    return assistantMessage
   } catch (error) {
     console.error("Error in enhancedChat function:", error)
 

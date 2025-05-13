@@ -23,7 +23,7 @@ const Header = () => {
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
-        scrolled ? "bg-secondary-900/95 backdrop-blur-md shadow-md" : "bg-secondary-900/80 backdrop-blur-sm",
+        scrolled ? "bg-secondary-900/90 backdrop-blur-md shadow-sm" : "bg-secondary-900/70 backdrop-blur-sm",
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,10 +57,10 @@ const Header = () => {
             </nav>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/no" className="text-white text-sm font-medium">
+            <Link href="/no" className="text-white text-sm font-normal">
               NO
             </Link>
-            <Link href="/en" className="text-gray-300 text-sm font-medium hover:text-white">
+            <Link href="/en" className="text-gray-300 text-sm font-normal hover:text-white">
               EN
             </Link>
           </div>
@@ -87,44 +87,44 @@ const Header = () => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               href="/om-oss"
-              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
+              className="block px-3 py-2 text-base font-normal text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
               Om oss
             </Link>
             <Link
               href="/produkter"
-              className="block px-3 py-2 text-base font-medium text-white bg-secondary-700 rounded-md"
+              className="block px-3 py-2 text-base font-normal text-white bg-secondary-700 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
               Produkter
             </Link>
             <Link
               href="/tjenester"
-              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
+              className="block px-3 py-2 text-base font-normal text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
               Tjenester
             </Link>
             <Link
               href="/referanser"
-              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
+              className="block px-3 py-2 text-base font-normal text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
               Referanser
             </Link>
             <Link
               href="/kontakt"
-              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
+              className="block px-3 py-2 text-base font-normal text-gray-300 hover:text-white hover:bg-secondary-700 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
               Kontakt
             </Link>
             <div className="flex space-x-4 px-3 py-2">
-              <Link href="/no" className="text-white text-sm font-medium">
+              <Link href="/no" className="text-white text-sm font-normal">
                 NO
               </Link>
-              <Link href="/en" className="text-gray-300 text-sm font-medium">
+              <Link href="/en" className="text-gray-300 text-sm font-normal">
                 EN
               </Link>
             </div>

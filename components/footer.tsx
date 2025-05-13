@@ -23,7 +23,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Produkter</h3>
+            <h3 className="text-lg font-medium mb-4">Produkter</h3>
             <ul className="space-y-2 text-sm font-light">
               <li>
                 <Link href="/produkter/torr-sandblasing" className="text-gray-300 hover:text-white">
@@ -49,7 +49,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Tjenester</h3>
+            <h3 className="text-lg font-medium mb-4">Tjenester</h3>
             <ul className="space-y-2 text-sm font-light">
               <li>
                 <Link href="/tjenester/sandblasing" className="text-gray-300 hover:text-white">
@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Kontakt oss</h3>
+            <h3 className="text-lg font-medium mb-4">Kontakt oss</h3>
             <address className="not-italic text-gray-300 text-sm font-light">
               <div className="flex items-center mb-2">
                 <MapPin className="h-4 w-4 mr-2 text-primary-400" />
