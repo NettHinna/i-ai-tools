@@ -1,44 +1,22 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter, Outfit } from "next/font/google"
 import "./globals.css"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import ChatWidgetWrapper from "@/components/chat/chat-widget-wrapper"
+import { Inter } from "next/font/google"
+import { ThemeProvider } from "@/components/theme-provider"
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["300", "400", "500", "600"],
-})
+const inter = Inter({ subsets: ["latin"] })
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-  display: "swap",
-  weight: ["300", "400", "500", "600"],
-})
-
-export const metadata: Metadata = {
-  title: "Derksen Trading AS - Mobil sandblåsing og overflatebehandling",
-  description: "Norges importør av IBIX sandblåsere – Sandblåsing og industrilakkering i Bodø og Nordland",
-  metadataBase: new URL("https://derksen.vercel.app"),
+export const metadata = {
+  title: "Scanfiber AS - Daily Charts",
+  description: "Daily financial charts and currency exchange rates",
     generator: 'v0.dev'
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="nb">
-      <body className={`${inter.variable} ${outfit.variable} font-sans relative`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <ChatWidgetWrapper />
+    <html lang="en" className="dark">
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

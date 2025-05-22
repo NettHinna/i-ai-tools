@@ -2,164 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-sans: "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    sans-serif;
-  --font-heading: "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    sans-serif;
-  --foreground-rgb: 30, 30, 30;
-  --background-rgb: 255, 255, 255;
-  --radius: 0.5rem;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+
+    /* Chart colors */
+    --chart-1: 195 64% 40%; /* Teal blue for Baltic Dry Index */
+    --chart-2: 221 83% 53%; /* Blue */
+    --chart-3: 0 84% 60%; /* Red */
+
+    /* Scanfiber colors */
+    --scanfiber-bg: 215 50% 8%;
+    --scanfiber-accent: 195 64% 40%;
+  }
+
+  .dark {
+    --background: 215 50% 8%; /* Dark navy background */
+    --foreground: 210 40% 98%;
+    --card: 215 45% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 215 45% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 195 64% 40%; /* Teal blue */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 195 64% 40%;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.5);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 1s ease-out;
+  }
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-background text-foreground;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
-  font-family: var(--font-inter), system-ui, sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 300;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-outfit), system-ui, sans-serif;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  font-weight: 500;
-}
-
-.hero-gradient {
-  background: linear-gradient(90deg, #1e2a3b 0%, #2d3b4d 100%);
-}
-
-.nav-item {
-  @apply px-3 py-2 text-sm font-normal transition-colors hover:text-primary-300;
-}
-
-.nav-item.active {
-  @apply text-white;
-}
-
-.nav-item.active::after {
-  content: "";
-  @apply block w-full h-0.5 bg-primary-500 mt-0.5;
-}
-
-@layer components {
-  .container-spacing {
-    @apply px-4 md:px-6 lg:px-8;
-  }
-
-  .section-spacing {
-    @apply py-12 md:py-16 lg:py-20;
-  }
-
-  .overlay-gradient-bottom {
-    @apply bg-gradient-to-t from-black/80 via-black/40 to-transparent;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  }
-
-  .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-md bg-secondary-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center rounded-md border border-white/80 bg-transparent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-secondary-800;
-  }
-
-  .modern-card {
-    @apply overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md;
-  }
-
-  .text-display {
-    @apply text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight;
-  }
-
-  .text-h1 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight;
-  }
-
-  .text-h2 {
-    @apply text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight;
-  }
-
-  .text-h3 {
-    @apply text-xl md:text-2xl lg:text-3xl font-medium tracking-tight;
-  }
-
-  .text-body-large {
-    @apply text-lg md:text-xl font-light;
-  }
-
-  .text-body {
-    @apply text-base font-light;
-  }
-
-  .text-body-small {
-    @apply text-sm font-light;
-  }
-
-  .text-on-dark {
-    @apply text-white;
-  }
-
-  .text-on-dark-secondary {
-    @apply text-white/90;
-  }
-
-  .text-on-light {
-    @apply text-gray-900;
-  }
-
-  .text-on-light-secondary {
-    @apply text-gray-600;
-  }
-
-  .font-heading {
-    @apply font-outfit;
-  }
-}
-
-.card {
-  @apply bg-white rounded-lg shadow-sm overflow-hidden;
-}
-
-.tag {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-normal bg-primary-50 text-primary-800;
-}
-
-.stat-value {
-  @apply text-4xl font-medium text-white;
-}
-
-.stat-label {
-  @apply text-sm text-gray-200 font-light;
-}
-
-/* Form styles */
-.form-input {
-  @apply w-full px-4 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-primary-500 focus:border-primary-500 font-light;
-}
-
-.form-label {
-  @apply block text-sm font-normal text-gray-700 mb-1;
-}
-
-.form-button {
-  @apply w-full md:w-auto px-6 py-3 bg-primary-600 text-white font-normal rounded-md hover:bg-primary-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed;
 }
