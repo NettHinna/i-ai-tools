@@ -29,6 +29,8 @@ export default function TradingViewBalticIndex() {
       interval: "D",
       timezone: "Etc/UTC",
       theme: "dark",
+      backgroundColor: "#131722",
+      gridColor: "#363c4e",
       style: "3",
       locale: "en",
       enable_publishing: false,
@@ -43,12 +45,18 @@ export default function TradingViewBalticIndex() {
       studies_overrides: {},
       overrides: {
         "paneProperties.background": "#131722",
+        "paneProperties.backgroundType": "solid",
         "paneProperties.vertGridProperties.color": "#363c4e",
         "paneProperties.horzGridProperties.color": "#363c4e",
         "symbolWatermarkProperties.transparency": 90,
+        "symbolWatermarkProperties.color": "#363c4e",
         "scalesProperties.textColor": "#AAA",
-        "mainSeriesProperties.candleStyle.wickUpColor": "#336854",
-        "mainSeriesProperties.candleStyle.wickDownColor": "#7f323f",
+        "scalesProperties.backgroundColor": "#131722",
+        "mainSeriesProperties.areaStyle.color1": "#2962FF",
+        "mainSeriesProperties.areaStyle.color2": "#131722",
+        "mainSeriesProperties.areaStyle.linecolor": "#2962FF",
+        "paneProperties.topMargin": 10,
+        "paneProperties.bottomMargin": 10,
       },
     }
 
@@ -70,7 +78,7 @@ export default function TradingViewBalticIndex() {
   }, [isClient])
 
   return (
-    <Card className="w-full bg-[#131722]">
+    <Card className="w-full bg-[#131722] border-[#363c4e]">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 bg-[#1E222D] text-white">
         <div>
           <h2 className="text-xl font-semibold">Baltic Dry Index</h2>

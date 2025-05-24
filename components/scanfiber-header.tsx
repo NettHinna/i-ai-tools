@@ -22,22 +22,22 @@ export default function ScanfiberHeader() {
         </div>
         <nav className="hidden md:flex space-x-6">
           <Link href="#" className="text-white hover:text-primary transition-colors">
-            meny punkt
+            Home
           </Link>
           <Link href="#" className="text-white hover:text-primary transition-colors">
-            meny punkt
+            About Us
           </Link>
           <Link href="#" className="text-white hover:text-primary transition-colors">
-            meny punkt
+            Gallery
           </Link>
           <Link href="#" className="text-white hover:text-primary transition-colors font-medium">
             Daily Charts
           </Link>
           <Link href="#" className="text-white hover:text-primary transition-colors">
-            meny punkt
+            Contact
           </Link>
           <Link href="#" className="text-white hover:text-primary transition-colors">
-            meny punkt
+            FSC®/PEFC
           </Link>
         </nav>
       </div>
