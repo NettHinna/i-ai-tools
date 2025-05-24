@@ -25,17 +25,31 @@ export default function TradingViewBalticIndex() {
 
     // TradingView widget configuration
     const widgetConfig: TradingViewWidgetConfig = {
-      symbol: "INDEX:BDI", // Baltic Dry Index symbol
+      symbol: "INDEX:BDI",
       interval: "D",
       timezone: "Etc/UTC",
       theme: "dark",
-      style: "3", // Area chart
+      style: "3",
       locale: "en",
       enable_publishing: false,
       hide_top_toolbar: false,
       hide_legend: false,
       hide_volume: true,
       autosize: true,
+      toolbar_bg: "#1E222D",
+      allow_symbol_change: false,
+      save_image: true,
+      container_id: containerId,
+      studies_overrides: {},
+      overrides: {
+        "paneProperties.background": "#131722",
+        "paneProperties.vertGridProperties.color": "#363c4e",
+        "paneProperties.horzGridProperties.color": "#363c4e",
+        "symbolWatermarkProperties.transparency": 90,
+        "scalesProperties.textColor": "#AAA",
+        "mainSeriesProperties.candleStyle.wickUpColor": "#336854",
+        "mainSeriesProperties.candleStyle.wickDownColor": "#7f323f",
+      },
     }
 
     try {
@@ -64,8 +78,8 @@ export default function TradingViewBalticIndex() {
         </div>
       </CardHeader>
 
-      <CardContent className="p-0">
-        <div className="h-[600px] relative">
+      <CardContent className="p-0 mb-4">
+        <div className="h-[450px] sm:h-[550px] relative">
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-[#131722] z-10">
               <Skeleton className="h-[550px] w-full bg-[#1E222D]" />

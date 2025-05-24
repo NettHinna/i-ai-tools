@@ -90,11 +90,11 @@ export default function BalticDryIndexChart() {
           )}
         </div>
 
-        <div className="h-[400px] p-4">
+        <div className="h-[350px] p-4">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="flex flex-col items-center">
-                <Skeleton className="h-[300px] w-full" />
+                <Skeleton className="h-[250px] w-full" />
                 <div className="mt-4 text-sm text-muted-foreground">Loading Baltic Dry Index data...</div>
               </div>
             </div>

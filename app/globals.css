@@ -78,10 +78,23 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+
+  /* Ensure proper scrolling on mobile */
+  @media (max-width: 768px) {
+    body {
+      -webkit-overflow-scrolling: touch;
+    }
   }
 }

@@ -238,11 +238,11 @@ export default function CurrencyCharts() {
 
           {currencyPairs.map((pair) => (
             <TabsContent key={pair.id} value={pair.id} className="m-0">
-              <div className="h-[300px] p-4">
+              <div className="h-[280px] p-4">
                 {isLoading[pair.id] ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="flex flex-col items-center">
-                      <Skeleton className="h-[250px] w-full" />
+                      <Skeleton className="h-[220px] w-full" />
                       <div className="mt-4 text-sm text-muted-foreground">Loading {pair.id} data...</div>
                     </div>
                   </div>

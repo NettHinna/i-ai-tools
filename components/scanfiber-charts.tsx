@@ -6,6 +6,8 @@ import ScanfiberHeader from "@/components/scanfiber-header"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AlertTriangle } from "lucide-react"
+import ScrollToTop from "@/components/scroll-to-top"
+import SectionContainer from "@/components/section-container"
 
 // Dynamically import TradingView components to avoid SSR issues
 const TradingViewCurrencyCharts = dynamic(() => import("@/components/trading-view-currency-charts"), {
@@ -98,10 +100,10 @@ export default function ScanfiberCharts() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--scanfiber-bg))]">
+    <div className="min-h-screen bg-[hsl(var(--scanfiber-bg))] scroll-smooth">
       <ScanfiberHeader />
 
-      <main className="container mx-auto py-8 px-4">
+      <main className="container mx-auto py-6 px-4 space-y-8">
         {error && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-md flex items-center text-amber-700">
             <AlertTriangle className="h-5 w-5 mr-2" />
@@ -109,20 +111,11 @@ export default function ScanfiberCharts() {
           </div>
         )}
 
-        <section className="mb-12">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Baltic Dry Index</h2>
-            <div className="text-sm text-white/70">Real-time market data</div>
-          </div>
+        <SectionContainer title="Baltic Dry Index" subtitle="Real-time market data">
           {isClient && <TradingViewBalticIndex />}
-        </section>
+        </SectionContainer>
 
-        <section>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Currency Charts</h2>
-            <div className="text-sm text-white/70">Live exchange rates</div>
-          </div>
-
+        <SectionContainer title="Currency Charts" subtitle="Live exchange rates">
           {isClient && (
             <Tabs defaultValue="charts" className="w-full">
               <TabsList className="w-full max-w-md mb-4">
@@ -139,7 +132,7 @@ export default function ScanfiberCharts() {
               </TabsContent>
             </Tabs>
           )}
-        </section>
+        </SectionContainer>
       </main>
 
       <footer className="bg-[hsl(var(--scanfiber-bg)/0.8)] py-6 text-center text-white text-sm mt-12">
@@ -167,6 +160,8 @@ export default function ScanfiberCharts() {
           </div>
         </div>
       </footer>
+
+      <ScrollToTop />
     </div>
   )
 }

@@ -90,7 +90,7 @@ export default function TradingViewCurrencyCharts() {
 
       <CardContent className="p-0">
         <Tabs defaultValue="EUR/USD" onValueChange={setSelectedPair} value={selectedPair}>
-          <TabsList className="w-full grid grid-cols-4 md:grid-cols-8 rounded-none bg-[#1E222D]">
+          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 rounded-none bg-[#1E222D] gap-1">
             {currencyPairs.map((pair) => (
               <TabsTrigger
                 key={pair.id}
@@ -102,10 +102,10 @@ export default function TradingViewCurrencyCharts() {
             ))}
           </TabsList>
 
-          <div className="h-[600px] relative">
+          <div className="h-[400px] sm:h-[500px] relative">
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-[#131722] z-10">
-                <Skeleton className="h-[550px] w-full bg-[#1E222D]" />
+                <Skeleton className="h-[450px] w-full bg-[#1E222D]" />
               </div>
             )}
 
