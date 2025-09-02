@@ -66,12 +66,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+      <header className="absolute top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Image
-                src="/images/derksen-logo.png"
+                src="/images/norsk-boligventilasjon-logo.webp"
                 alt="Norsk Boligventilasjon"
                 width={200}
                 height={60}
@@ -80,16 +80,16 @@ export default function HomePage() {
               />
             </div>
             <nav className="hidden md:flex space-x-8">
-              <a href="#tjenester" className="text-white hover:text-[#FF6B35] font-medium transition-colors">
+              <a href="#tjenester" className="text-gray-700 hover:text-[#FF6B35] font-medium transition-colors">
                 Tjenester
               </a>
-              <a href="#kalkulator" className="text-white hover:text-[#FF6B35] font-medium transition-colors">
+              <a href="#kalkulator" className="text-gray-700 hover:text-[#FF6B35] font-medium transition-colors">
                 Energikalkulator
               </a>
-              <a href="#om-oss" className="text-white hover:text-[#FF6B35] font-medium transition-colors">
+              <a href="#om-oss" className="text-gray-700 hover:text-[#FF6B35] font-medium transition-colors">
                 Om oss
               </a>
-              <a href="#kontakt" className="text-white hover:text-[#FF6B35] font-medium transition-colors">
+              <a href="#kontakt" className="text-gray-700 hover:text-[#FF6B35] font-medium transition-colors">
                 Kontakt
               </a>
             </nav>
@@ -434,7 +434,7 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <div className="flex items-center mb-4">
                 <Image
-                  src="/images/derksen-logo.png"
+                  src="/images/norsk-boligventilasjon-logo.webp"
                   alt="Norsk Boligventilasjon"
                   width={180}
                   height={54}
