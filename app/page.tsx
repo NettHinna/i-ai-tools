@@ -71,7 +71,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Image
-                src="/images/nbv-logo.png"
+                src="/images/derksen-logo.png"
                 alt="Norsk Boligventilasjon"
                 width={200}
                 height={60}
@@ -272,7 +272,7 @@ export default function HomePage() {
               >
                 <div className="relative h-48 overflow-hidden">
                   <Image
-                    src={service.image || "/placeholder.svg"}
+                    src={service.image || "/placeholder.svg?height=200&width=400"}
                     alt={service.title}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-300"
@@ -434,7 +434,7 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <div className="flex items-center mb-4">
                 <Image
-                  src="/images/nbv-logo.png"
+                  src="/images/derksen-logo.png"
                   alt="Norsk Boligventilasjon"
                   width={180}
                   height={54}
